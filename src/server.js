@@ -5,6 +5,7 @@ import express from'express'
 import cors from'cors'
 import cookieParser from 'cookie-parser'
 import { connectDB } from './config/database.js'
+import authRoutes from './routes/authRoutes.js'
 
 const server=express()
 
@@ -14,6 +15,8 @@ server.use(cors())
 server.use(cookieParser())
 
 const port=process.env.PORT||5000
+
+server.use("/api/auth",authRoutes)
 
 const startDBConnection=async()=>{
     try {
