@@ -110,7 +110,7 @@ export const loginUser = async (req, res) => {
 };
 
 // Admin Login Controller
-export const adminLgin = async (req, res) => {
+export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
