@@ -49,7 +49,7 @@ export const getAllMenuItems = async (req, res) => {
 export const updateMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category } = req.body;
+    const { name, description, price, category ,isAvailable} = req.body;
 
     const menuItem = await Menu.findById(id);
     if (!menuItem) {
