@@ -5,7 +5,7 @@ import {
   failure,
   missingResponse,
   notFoundResponse,
-  succcessResponse,
+  successResponse,
 } from "../utils/responseHandlers.js";
 
 // Add Category Controller
@@ -87,7 +87,7 @@ export const deleteCategory = async (req, res) => {
     if (!category) {
       return notFoundResponse(res, "Category not found");
     }
-    return succcessResponse(res, 200, "Category deleted successfully");
+    return successResponse(res, 200, "Category deleted successfully");
   } catch (error) {
     return failure(res, "Failed to delete category");
   }

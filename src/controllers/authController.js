@@ -6,7 +6,7 @@ import {
   failure,
   invalidResponse,
   alreadyExistsResponse,
-  succcessResponse,
+  successResponse,
 } from "../utils/responseHandlers.js";
 
 // Set token in HTTP-only cookie
@@ -48,7 +48,7 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    return succcessResponse(res, 201, "User registered successfully");
+    return successResponse(res, 201, "User registered successfully");
   } catch (error) {
     console.log("Error in registerUser:", error);
     return failure(res);
@@ -60,7 +60,7 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return missingResponse(res);
+      return missingResponse(res, "Please provide email and password");
     }
 
     // Check if user exists
@@ -88,7 +88,7 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in loginUser:", error);
-    return failure(res);
+    return failure(res, "Failed to login");
   }
 };
 
@@ -111,7 +111,7 @@ export const adminLogin = async (req, res) => {
       expiresIn: "1d",
     });
     setCookie(res, token);
-    return succcessResponse(res, 200, "Admin Login Successful");
+    return successResponse(res, 200, "Admin Login Successful");
   } catch (error) {
     console.log("Error in adminLogin:", error);
     return failure(res, "Failed to login as admin");
@@ -122,7 +122,7 @@ export const adminLogin = async (req, res) => {
 export const logoutUser = (req, res) => {
   try {
     res.clearCookie("token");
-    return succcessResponse(res, 200, "Logout Successful");
+    return successResponse(res, 200, "Logout Successful");
   } catch (error) {
     console.log("Error in logoutUser:", error);
     return failure(res);

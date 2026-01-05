@@ -6,7 +6,7 @@ export const failure = (res, message = "Internal Server Error") => {
   });
 };
 
-export const succcessResponse = (res, status, message = "Success") => {
+export const successResponse = (res, status, message = "Success") => {
   res.status(status).json({
     message,
     success: true,
