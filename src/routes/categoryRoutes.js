@@ -11,7 +11,7 @@ import {
 const categoryRoutes = Router();
 
 categoryRoutes.post("/add", adminOnly, upload.single("image"), addCategory);
-categoryRoutes.get("/add", getAllCategories);
+categoryRoutes.get("/all", getAllCategories);
 categoryRoutes.put(
   "/update/:id",
   adminOnly,
