@@ -18,16 +18,16 @@ const generateToken = (res, payload) => {
 };
 
 // Failure Response Helper
-const failure = () => {
-  return res.status(500).json({
+const failure = (res) => {
+  res.status(500).json({
     message: "Internal Server Error",
     success: false,
   });
 };
 
 // Missing Fields Response Helper
-const missingResponse = () => {
-  return res.status(400).json({
+const missingResponse = (res) => {
+  res.status(400).json({
     message: "Please provide all required fields",
     success: false,
   });
@@ -38,20 +38,20 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      missingResponse();
+      return missingResponse(res);
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(409).json({
         message: "User already exists",
         success: false,
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    await User.create({
       name,
       email,
       password: hashedPassword,
@@ -62,7 +62,7 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in registerUser:", error);
-    failure();
+    return failure(res);
   }
 };
 
@@ -71,7 +71,7 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      missingResponse();
+      return missingResponse(res);
     }
 
     // Check if user exists
@@ -105,7 +105,7 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in loginUser:", error);
-    failure();
+    return failure(res);
   }
 };
 
@@ -114,7 +114,7 @@ export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      missingResponse();
+      return missingResponse(res);
     }
 
     const adminEmail = process.env.ADMIN_EMAIL;
@@ -127,7 +127,9 @@ export const adminLogin = async (req, res) => {
     }
 
     // Generate Token
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -138,7 +140,10 @@ export const adminLogin = async (req, res) => {
       message: "Admin Login Successful",
       success: true,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in adminLogin:", error);
+    return failure(res);
+  }
 };
 
 // Logout User Controller
@@ -151,6 +156,6 @@ export const logoutUser = (req, res) => {
     });
   } catch (error) {
     console.log("Error in logoutUser:", error);
-    failure();
+    return failure(res);
   }
 };
