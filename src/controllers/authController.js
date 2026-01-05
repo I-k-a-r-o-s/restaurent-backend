@@ -2,18 +2,22 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
-//Genereate JWT Token
-const generateToken = (res, payload) => {
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-  // Set token in HTTP-only cookie
+// Set token in HTTP-only cookie
+const setCookie = (res, token) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 24 * 60 * 60 * 1000, //1 day
   });
+};
+
+//Genereate JWT Token
+const generateToken = (res, payload) => {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+  setCookie(res, token);
   return token;
 };
 
@@ -77,8 +81,8 @@ export const loginUser = async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({
-        message: "Nonexistent User",
+      return res.status(401).json({
+        message: "Invalid Credentials",
         success: false,
       });
     }
@@ -86,7 +90,7 @@ export const loginUser = async (req, res) => {
     // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Invalid Credentials",
         success: false,
       });
@@ -119,8 +123,8 @@ export const adminLogin = async (req, res) => {
 
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
-    if (email !== adminEmail && password !== adminPassword) {
-      return res.status(400).json({
+    if (email !== adminEmail || password !== adminPassword) {
+      return res.status(401).json({
         message: "Invalid Credentials",
         success: false,
       });
@@ -130,12 +134,7 @@ export const adminLogin = async (req, res) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000, //1 day
-    });
+    setCookie(res, token);
     return res.status(200).json({
       message: "Admin Login Successful",
       success: true,
