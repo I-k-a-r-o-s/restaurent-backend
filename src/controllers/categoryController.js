@@ -1,6 +1,12 @@
 import { v2 as cloudinary } from "cloudinary";
 import Category from "../models/categoryModel.js";
-import { alreadyExistsResponse, failure, missingResponse, notFoundResponse, succcessResponse } from "../utils/responseHandlers.js";
+import {
+  alreadyExistsResponse,
+  failure,
+  missingResponse,
+  notFoundResponse,
+  succcessResponse,
+} from "../utils/responseHandlers.js";
 
 // Add Category Controller
 export const addCategory = async (req, res) => {
@@ -75,14 +81,14 @@ export const updateCategory = async (req, res) => {
 };
 
 export const deleteCategory = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const category = await Category.findByIdAndDelete(id);
-        if (!category) {
-            return notFoundResponse(res, "Category not found");
-        }
-        return succcessResponse(res, 200, "Category deleted successfully");
-    } catch (error) {
-        return failure(res, "Failed to delete category");
+  try {
+    const { id } = req.params;
+    const category = await Category.findByIdAndDelete(id);
+    if (!category) {
+      return notFoundResponse(res, "Category not found");
     }
-}
+    return succcessResponse(res, 200, "Category deleted successfully");
+  } catch (error) {
+    return failure(res, "Failed to delete category");
+  }
+};

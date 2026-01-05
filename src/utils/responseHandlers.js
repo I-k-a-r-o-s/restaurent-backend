@@ -6,15 +6,18 @@ export const failure = (res, message = "Internal Server Error") => {
   });
 };
 
-export const succcessResponse=(res,status,message="Success")=>{
+export const succcessResponse = (res, status, message = "Success") => {
   res.status(status).json({
     message,
     success: true,
   });
-}
+};
 
 // Missing Fields Response Helper
-export const missingResponse = (res, message = "Please provide all required fields") => {
+export const missingResponse = (
+  res,
+  message = "Please provide all required fields"
+) => {
   res.status(400).json({
     message,
     success: false,
@@ -41,4 +44,4 @@ export const notFoundResponse = (res, message = "Not found") => {
     message,
     success: false,
   });
-}
+};
