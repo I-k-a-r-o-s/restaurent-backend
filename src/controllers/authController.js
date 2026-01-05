@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -14,7 +14,7 @@ const setCookie = (res, token) => {
 
 //Genereate JWT Token
 const generateToken = (res, payload) => {
-  const token = sign(payload, process.env.JWT_SECRET, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   setCookie(res, token);
@@ -130,7 +130,7 @@ export const adminLogin = async (req, res) => {
     }
 
     // Generate Token
-    const token = sign({ email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     setCookie(res, token);

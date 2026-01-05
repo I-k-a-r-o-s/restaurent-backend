@@ -1,8 +1,8 @@
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 // Helper to verify token and return decoded payload
 const verifyToken = (token) => {
-  return verify(token, process.env.JWT_SECRET);
+  return jwt.verify(token, process.env.JWT_SECRET);
 };
 
 // Helper to send authorization error
