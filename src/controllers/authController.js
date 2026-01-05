@@ -1,7 +1,13 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
-import { missingResponse,failure,invalidResponse } from "../utils/responseHandlers.js";
+import {
+  missingResponse,
+  failure,
+  invalidResponse,
+  alreadyExistsResponse,
+  succcessResponse,
+} from "../utils/responseHandlers.js";
 
 // Set token in HTTP-only cookie
 const setCookie = (res, token) => {
@@ -27,16 +33,13 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return missingResponse(res);
+      return missingResponse(res, "Please provide name, email, and password");
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({
-        message: "User already exists",
-        success: false,
-      });
+      return alreadyExistsResponse(res, "User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -45,10 +48,7 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    return res.status(201).json({
-      message: "User registered successfully",
-      success: true,
-    });
+    return succcessResponse(res, 201, "User registered successfully");
   } catch (error) {
     console.log("Error in registerUser:", error);
     return failure(res);
@@ -66,13 +66,13 @@ export const loginUser = async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return invalidResponse(res);
+      return invalidResponse(res, "Invalid email or password");
     }
 
     // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return invalidResponse(res);
+      return invalidResponse(res, "Invalid email or password");
     }
 
     // Generate Token
@@ -97,13 +97,13 @@ export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return missingResponse(res);
+      return missingResponse(res, "Please provide admin email and password");
     }
 
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
     if (email !== adminEmail || password !== adminPassword) {
-      return invalidResponse(res);
+      return invalidResponse(res, "Invalid admin credentials");
     }
 
     // Generate Token
@@ -111,13 +111,10 @@ export const adminLogin = async (req, res) => {
       expiresIn: "1d",
     });
     setCookie(res, token);
-    return res.status(200).json({
-      message: "Admin Login Successful",
-      success: true,
-    });
+    return succcessResponse(res, 200, "Admin Login Successful");
   } catch (error) {
     console.log("Error in adminLogin:", error);
-    return failure(res);
+    return failure(res, "Failed to login as admin");
   }
 };
 
@@ -125,10 +122,7 @@ export const adminLogin = async (req, res) => {
 export const logoutUser = (req, res) => {
   try {
     res.clearCookie("token");
-    return res.status(200).json({
-      message: "Logout Successful",
-      success: true,
-    });
+    return succcessResponse(res, 200, "Logout Successful");
   } catch (error) {
     console.log("Error in logoutUser:", error);
     return failure(res);
@@ -140,13 +134,10 @@ export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-        success: false,
-      });
+      return notFoundResponse(res, "User not found");
     }
     res.status(200).json(user);
   } catch (error) {
-    return failure(res);
+    return failure(res, "Failed to fetch user profile");
   }
 };
