@@ -26,7 +26,7 @@ export const addCategory = async (req, res) => {
       category: newCategory,
     });
   } catch (error) {
-    failure(res, "Failed to add category");
+    return failure(res, "Failed to add category");
   }
 };
 
@@ -42,7 +42,7 @@ export const getAllCategories = async (req, res) => {
       categories,
     });
   } catch (error) {
-    failure(res, "Failed to fetch categories");
+    return failure(res, "Failed to fetch categories");
   }
 };
 
@@ -70,7 +70,7 @@ export const updateCategory = async (req, res) => {
       category,
     });
   } catch (error) {
-    failure(res, "Failed to update category");
+    return failure(res, "Failed to update category");
   }
 };
 
@@ -83,6 +83,6 @@ export const deleteCategory = async (req, res) => {
         }
         return succcessResponse(res, 200, "Category deleted successfully");
     } catch (error) {
-        failure(res, "Failed to delete category");
+        return failure(res, "Failed to delete category");
     }
 }
