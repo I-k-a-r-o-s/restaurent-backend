@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./config/database.js";
 import authRoutes from "./routes/authRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import connectCloudinary from "./config/cloudinary.js";
 
 const server = express();
 
@@ -22,12 +23,13 @@ server.use("/api/category", categoryRoutes);
 
 const startDBConnection = async () => {
   try {
+    await connectCloudinary();
     await connectDB();
     server.listen(port, () => {
       console.log(`Server is running on port: ${port}`);
     });
   } catch (error) {
-    console.log("MongoDB Connection Failed! :", error);
+    console.log("Connections Failed! :", error);
     process.exit(1);
   }
 };
