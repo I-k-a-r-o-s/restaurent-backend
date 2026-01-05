@@ -138,6 +138,7 @@ export const getProfile = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
+    console.log("Error in getProfile:", error);
     return failure(res, "Failed to fetch user profile");
   }
 };

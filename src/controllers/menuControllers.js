@@ -27,6 +27,7 @@ export const addMenuItem = async (req, res) => {
       menuItem: newMenuItem,
     });
   } catch (error) {
+    console.log("Error in addMenuItem:", error);
     return failure(res, "Failed to add menu item");
   }
 };
@@ -42,6 +43,7 @@ export const getAllMenuItems = async (req, res) => {
       menuItems,
     });
   } catch (error) {
+    console.log("Error in getAllMenuItems:", error);
     return failure(res, "Failed to fetch menu items");
   }
 };
@@ -49,7 +51,7 @@ export const getAllMenuItems = async (req, res) => {
 export const updateMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category ,isAvailable} = req.body;
+    const { name, description, price, category, isAvailable } = req.body;
 
     const menuItem = await Menu.findById(id);
     if (!menuItem) {
@@ -88,6 +90,7 @@ export const updateMenuItem = async (req, res) => {
       menuItem,
     });
   } catch (error) {
+    console.log("Error in updateMenuItem:", error);
     return failure(res, "Failed to update menu item");
   }
 };
@@ -104,6 +107,7 @@ export const deleteMenuItem = async (req, res) => {
       success: true,
     });
   } catch (error) {
+    console.log("Error in deleteMenuItem:", error);
     return failure(res, "Failed to delete menu item");
   }
 };

@@ -27,7 +27,7 @@ export const protect = (req, res, next) => {
     req.user = decoded;
     return next();
   } catch (error) {
-    console.error("Token verification error:", error.message);
+    console.log("Error in protect:", error);
     return sendAuthError(res);
   }
 };
@@ -49,7 +49,7 @@ export const adminOnly = (req, res, next) => {
       message: "Forbidden: admin access required",
     });
   } catch (error) {
-    console.error("Token verification error:", error.message);
+    console.log("Error in adminOnly:", error);
     return sendAuthError(res);
   }
 };
