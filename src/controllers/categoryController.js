@@ -39,7 +39,7 @@ export const addCategory = async (req, res) => {
 // Get All Categories Controller
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = (await Category.find({})).toSorted({
+    const categories = await Category.find({}).sort({
       createdAt: -1,
     });
     return res.status(200).json({
