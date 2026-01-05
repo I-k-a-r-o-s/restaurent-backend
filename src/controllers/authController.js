@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -14,7 +14,7 @@ const setCookie = (res, token) => {
 
 //Genereate JWT Token
 const generateToken = (res, payload) => {
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+  const token = sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   setCookie(res, token);
@@ -130,7 +130,7 @@ export const adminLogin = async (req, res) => {
     }
 
     // Generate Token
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    const token = sign({ email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     setCookie(res, token);
@@ -154,6 +154,22 @@ export const logoutUser = (req, res) => {
     });
   } catch (error) {
     console.log("Error in logoutUser:", error);
+    return failure(res);
+  }
+};
+
+// Get User Profile Controller
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+    res.status(200).json(user);
+  } catch (error) {
     return failure(res);
   }
 };
