@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/database.js";
 import authRoutes from "./routes/authRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 const server = express();
 
@@ -17,6 +18,7 @@ server.use(cookieParser());
 const port = process.env.PORT || 5000;
 
 server.use("/api/auth", authRoutes);
+server.use("/api/category", categoryRoutes);
 
 const startDBConnection = async () => {
   try {
