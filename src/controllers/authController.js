@@ -37,6 +37,14 @@ const missingResponse = (res) => {
   });
 };
 
+// Invalid Credentials Response Helper
+const invalidResponse = (res) => {
+  res.status(401).json({
+    message: "Invalid Credentials",
+    success: false,
+  });
+};
+
 // Register User Controller
 export const registerUser = async (req, res) => {
   try {
@@ -81,19 +89,13 @@ export const loginUser = async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({
-        message: "Invalid Credentials",
-        success: false,
-      });
+      return invalidResponse(res);
     }
 
     // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid Credentials",
-        success: false,
-      });
+      return invalidResponse(res);
     }
 
     // Generate Token
@@ -124,10 +126,7 @@ export const adminLogin = async (req, res) => {
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
     if (email !== adminEmail || password !== adminPassword) {
-      return res.status(401).json({
-        message: "Invalid Credentials",
-        success: false,
-      });
+      return invalidResponse(res);
     }
 
     // Generate Token
