@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
-import { missingResponse,failure,invalidResponse } from "../utils/responsehandlers.js";
+import { missingResponse,failure,invalidResponse } from "../utils/responseHandlers.js";
 
 // Set token in HTTP-only cookie
 const setCookie = (res, token) => {
