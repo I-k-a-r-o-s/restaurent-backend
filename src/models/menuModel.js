@@ -15,6 +15,10 @@ const menuSchema = new Schema(
       type: Number,
       required: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category", // Reference to Category model
