@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload } from "../middleware/multer.js";
+import upload from "../middleware/multer.js";
 import { adminOnly } from "../middleware/authMiddleWare.js";
 import {
   addCategory,
