@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(); // Load environment variables from .env file
 
 import express from "express";
 import cors from "cors";
@@ -15,30 +15,48 @@ import bookingRoutes from "./routes/bookingRoutes.js";
 
 const server = express();
 
-//middleware
+// ===== Middleware Setup =====
+// Parse incoming JSON request bodies
 server.use(express.json());
+
+// Enable Cross-Origin Resource Sharing (allows frontend to call this API)
 server.use(cors());
+
+// Parse cookies from requests (needed for JWT token handling)
 server.use(cookieParser());
 
 const port = process.env.PORT || 5000;
 
-server.use("/api/auth", authRoutes);
-server.use("/api/category", categoryRoutes);
-server.use("/api/menu", menuRoutes);
-server.use("/api/cart", cartRoutes);
-server.use("/api/order", orderRoutes);
-server.use("/api/bookings", bookingRoutes);
+// ===== API Routes =====
+// Mount all route handlers on their respective paths
+server.use("/api/auth", authRoutes); // Authentication routes
+server.use("/api/category", categoryRoutes); // Category management routes
+server.use("/api/menu", menuRoutes); // Menu item routes
+server.use("/api/cart", cartRoutes); // Shopping cart routes
+server.use("/api/order", orderRoutes); // Order management routes
+server.use("/api/bookings", bookingRoutes); // Table booking routes
 
+/**
+ * Initialize database and server
+ * Connects to MongoDB and Cloudinary before starting the server
+ */
 const startDBConnection = async () => {
   try {
+    // Connect to Cloudinary for image storage
     await connectCloudinary();
+
+    // Connect to MongoDB database
     await connectDB();
+
+    // Start Express server on specified port
     server.listen(port, () => {
       console.log(`Server is running on port: ${port}`);
     });
   } catch (error) {
     console.log("Connections Failed! :", error);
-    process.exit(1);
+    process.exit(1); // Exit if connections fail
   }
 };
+
+// Start the application
 startDBConnection();
