@@ -10,6 +10,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import connectCloudinary from "./config/cloudinary.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 const server = express();
 
@@ -24,6 +25,7 @@ server.use("/api/auth", authRoutes);
 server.use("/api/category", categoryRoutes);
 server.use("/api/menu",menuRoutes)
 server.use("/api/cart",cartRoutes)
+server.use("/api/order",orderRoutes)
 
 const startDBConnection = async () => {
   try {
