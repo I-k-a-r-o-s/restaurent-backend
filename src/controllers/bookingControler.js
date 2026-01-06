@@ -74,21 +74,23 @@ export const getAllBookings = async (req, res) => {
 
 export const updateBookingStatus = async (req, res) => {
   try {
-    const { bookingId } = req.params;
+    const { id } = req.params;
     const { status } = req.body;
 
-    const booking = await Booking.findOne(bookingId);
+    const booking = await Booking.findById(id);
     if (!booking) {
       return notFoundResponse(res, "Booking Unavailable!");
     }
 
     booking.status = status;
     await booking.save();
-    return res.status(200).json({
-      message: "Booking Status Updated",
-      success: true,
-      booking,
-    });
+    return res.status(200).json(
+        {
+            message:"Booking Status Updated",
+            success:true,
+            booking
+        }
+    )
   } catch (error) {
     console.log("Error in updateBookingStatus:", error);
     return failure(res, "Failed to Update Bookings");
