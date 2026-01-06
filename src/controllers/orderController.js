@@ -70,7 +70,7 @@ export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("user")
-      .toSorted({ createdAt: -1 });
+      .sort({ createdAt: -1 });
     return res.status(200).json({
       message: "Orders fetched successfully",
       success: true,
