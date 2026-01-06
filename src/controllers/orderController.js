@@ -28,10 +28,12 @@ export const placeOrder = async (req, res) => {
 
     const newOrder = await Order.create({
       user: id,
-      item: cart.items.map((item) => ({
+      items: cart.items.map((item) => ({
         menuItem: item.menuItem._id,
         quantity: item.quantity,
       })),
+      totalAmount,
+      address,
     });
 
     //clear the cart
@@ -52,7 +54,7 @@ export const getUserOrders = async (req, res) => {
   try {
     const { id } = req.user;
 
-    const orders = (await Order.find({ user: id })).sort({ createdAt: -1 });
+    const orders = await Order.find({ user: id }).sort({ createdAt: -1 });
     return res.status(200).json({
       message: "Orders fetched successfully",
       success: true,
