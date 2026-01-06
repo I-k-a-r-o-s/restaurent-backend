@@ -11,6 +11,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 const server = express();
 
@@ -23,9 +24,10 @@ const port = process.env.PORT || 5000;
 
 server.use("/api/auth", authRoutes);
 server.use("/api/category", categoryRoutes);
-server.use("/api/menu",menuRoutes)
-server.use("/api/cart",cartRoutes)
-server.use("/api/order",orderRoutes)
+server.use("/api/menu", menuRoutes);
+server.use("/api/cart", cartRoutes);
+server.use("/api/order", orderRoutes);
+server.use("/api/bookings", bookingRoutes);
 
 const startDBConnection = async () => {
   try {
