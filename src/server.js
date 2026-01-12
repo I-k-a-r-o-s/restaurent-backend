@@ -20,7 +20,12 @@ const server = express();
 server.use(express.json());
 
 // Enable Cross-Origin Resource Sharing (allows frontend to call this API)
-server.use(cors());
+server.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 
 // Parse cookies from requests (needed for JWT token handling)
 server.use(cookieParser());

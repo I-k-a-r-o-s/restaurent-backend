@@ -85,6 +85,9 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 # Node Environment
 NODE_ENV=development
+
+# CORS origin
+CORS_ORIGIN=your_cors_origin_url
 ```
 
 ## API Documentation
