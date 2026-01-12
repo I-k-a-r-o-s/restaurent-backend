@@ -184,3 +184,14 @@ export const getProfile = async (req, res) => {
     return failure(res, "Failed to fetch user profile");
   }
 };
+
+export const isAuth = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id).select("-password");
+    return res.status(200).json({ message:"Valid user", success: true, user });
+  } catch (error) {
+    console.log("Error in isAuth:", error);
+    return failure(res, "Failed to checck authorization!");
+  }
+};

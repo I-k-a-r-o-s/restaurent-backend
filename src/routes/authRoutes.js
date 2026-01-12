@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   adminLogin,
   getProfile,
+  isAuth,
   loginUser,
   logoutUser,
   registerUser,
@@ -29,5 +30,7 @@ authRoutes.post("/logout", logoutUser);
 
 // Get authenticated user's profile (requires valid JWT token)
 authRoutes.get("/profile", protect, getProfile);
+
+authRoutes.get("/is-auth",protect,isAuth)
 
 export default authRoutes;
