@@ -192,6 +192,6 @@ export const isAuth = async (req, res) => {
     return res.status(200).json({ message:"Valid user", success: true, user });
   } catch (error) {
     console.log("Error in isAuth:", error);
-    return failure(res, "Failed to checck authorization!");
+    return invalidResponse(res, "Failed to check authorization!");
   }
 };
