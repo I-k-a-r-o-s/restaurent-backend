@@ -39,7 +39,7 @@ server.use("/api/category", categoryRoutes); // Category management routes
 server.use("/api/menu", menuRoutes); // Menu item routes
 server.use("/api/cart", cartRoutes); // Shopping cart routes
 server.use("/api/order", orderRoutes); // Order management routes
-server.use("/api/bookings", bookingRoutes); // Table booking routes
+server.use("/api/booking", bookingRoutes); // Table booking routes
 
 /**
  * Initialize database and server

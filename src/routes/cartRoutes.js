@@ -20,6 +20,6 @@ cartRoutes.post("/add", protect, addToCart);
 cartRoutes.get("/get", protect, getCart);
 
 // Remove item from cart (requires authentication)
-cartRoutes.delete("/remove", protect, removeFromCart);
+cartRoutes.delete("/remove/:menuId", protect, removeFromCart);
 
 export default cartRoutes;

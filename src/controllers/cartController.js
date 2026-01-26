@@ -1,6 +1,10 @@
 import Cart from "../models/cartModel.js";
 import Menu from "../models/menuModel.js";
-import { failure, notFoundResponse } from "../utils/responseHandlers.js";
+import {
+  failure,
+  notFoundResponse,
+  successResponse,
+} from "../utils/responseHandlers.js";
 
 /**
  * Add an item to the user's shopping cart
@@ -8,11 +12,11 @@ import { failure, notFoundResponse } from "../utils/responseHandlers.js";
  */
 export const addToCart = async (req, res) => {
   try {
-    const { menuItemId, quantity } = req.body;
+    const { menuId, quantity } = req.body;
     const { id } = req.user; // Get user ID from authenticated request
 
     // Verify that the menu item exists
-    const menuItem = await Menu.findById(menuItemId);
+    const menuItem = await Menu.findById(menuId);
     if (!menuItem) {
       return notFoundResponse(res, "Menu item not found!");
     }
@@ -25,7 +29,7 @@ export const addToCart = async (req, res) => {
 
     // Check if item is already in the cart
     const existingItem = cart.items.find((item) => {
-      return item.menuItem.toString() === menuItemId; // FIX: Added return statement
+      return item.menuItem.toString() === menuId; // FIX: Added return statement
     });
 
     if (existingItem) {
@@ -33,13 +37,13 @@ export const addToCart = async (req, res) => {
       existingItem.quantity += quantity;
     } else {
       // If new item, add it to cart
-      cart.items.push({ menuItem: menuItemId, quantity });
+      cart.items.push({ menuItem: menuId, quantity });
     }
 
     // Save cart to database
     await cart.save();
     return res.status(200).json({
-      message: "Item added to cart successfully",
+      message: "Item added to cart",
       success: true,
       cart,
     });
@@ -64,8 +68,11 @@ export const getCart = async (req, res) => {
     if (!cart) {
       return res.status(200).json({ items: [] });
     }
-
-    return res.status(200).json(cart);
+    return res.status(200).json({
+      message: "Cart retrieved successfully",
+      success: true,
+      cart,
+    });
   } catch (error) {
     console.log("Error in getCart:", error);
     return failure(res, "Failed to retrieve cart");
@@ -79,7 +86,7 @@ export const getCart = async (req, res) => {
 export const removeFromCart = async (req, res) => {
   try {
     const { id } = req.user; // Get user ID from authenticated request
-    const { menuItemId } = req.body; // Get menu item ID to remove
+    const { menuId } = req.params; // Get menu item ID to remove
 
     // Find user's cart
     const cart = await Cart.findOne({ user: id });
@@ -89,7 +96,7 @@ export const removeFromCart = async (req, res) => {
 
     // Remove the specified item from cart items array
     cart.items = cart.items.filter((item) => {
-      return item.menuItem.toString() !== menuItemId; // FIX: Added return statement
+      return item.menuItem.toString() !== menuId; // FIX: Added return statement
     });
 
     // Save updated cart

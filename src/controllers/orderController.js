@@ -14,7 +14,7 @@ import {
 export const placeOrder = async (req, res) => {
   try {
     const { id } = req.user; // Get user ID from authenticated request
-    const { address } = req.body; // Get delivery address
+    const { address,paymentMethod } = req.body; // Get delivery address
 
     // Validate delivery address is provided
     if (!address) {
@@ -32,7 +32,7 @@ export const placeOrder = async (req, res) => {
     // Calculate total amount by summing (price × quantity) for each item
     const totalAmount = cart.items.reduce(
       (sum, item) => sum + item.menuItem.price * item.quantity,
-      0
+      0,
     );
 
     // Create new order with items from cart
@@ -44,6 +44,7 @@ export const placeOrder = async (req, res) => {
       })),
       totalAmount,
       address,
+      paymentMethod
     });
 
     // Clear the cart items after successful order placement
@@ -90,7 +91,10 @@ export const getUserOrders = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     // Find all orders and populate user details
-    const orders = await Order.find().populate("user").sort({ createdAt: -1 });
+    const orders = await Order.find()
+      .populate("user")
+      .populate("items.menuItem")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "Orders fetched successfully",

@@ -146,7 +146,13 @@ export const adminLogin = async (req, res) => {
     });
     setCookie(res, token);
 
-    return successResponse(res, 200, "Admin Login Successful");
+    return res.status(200).json({
+      admin: {
+        admin: adminEmail,
+      },
+      message: "Admin Logged in Successfully",
+      success: true,
+    });
   } catch (error) {
     console.log("Error in adminLogin:", error);
     return failure(res, "Failed to login as admin");
@@ -189,7 +195,7 @@ export const isAuth = async (req, res) => {
   try {
     const { id } = req.user;
     const user = await User.findById(id).select("-password");
-    return res.status(200).json({ message:"Valid user", success: true, user });
+    return res.status(200).json({ message: "Valid user", success: true, user });
   } catch (error) {
     console.log("Error in isAuth:", error);
     return invalidResponse(res, "Failed to check authorization!");
